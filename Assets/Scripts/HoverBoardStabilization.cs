@@ -53,12 +53,12 @@ public class HoverBoardStabilization : MonoBehaviour
             RigidbodyRef.AddForceAtPosition(force, stabilizer.position, ForceMode.Force);
             GravityDirection += hit.normal;
         }
-        Physics.gravity = -gravity * (GravityDirection / 4).normalized;
-        if (Physics.gravity.magnitude <= 0.1f)
-        {
-            Physics.gravity = gravity * Vector3.down;
-            Debug.Log("beep");
-        }
+        // Physics.gravity = -gravity * (GravityDirection / 4).normalized;
+        // if (Physics.gravity.magnitude <= 0.1f)
+        // {
+        //     Physics.gravity = gravity * Vector3.down;
+        //     Debug.Log("beep");
+        // }
     }
 
     private void OnDrawGizmos()

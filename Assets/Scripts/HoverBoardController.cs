@@ -68,11 +68,11 @@ public class HoverBoardController : MonoBehaviour
     {
         CurrentThrust = 0.0f;
         float thrustInput = InputVector.y;
-        if (thrustInput > 0)
+        if (thrustInput > 0.0f)
         {
             CurrentThrust = thrustInput * ForwardAccelleration;
         }
-        else if (thrustInput < 0)
+        else if (thrustInput < 0.0f)
         {
             CurrentThrust = thrustInput * BackwardAccelleration;
         }
@@ -86,12 +86,12 @@ public class HoverBoardController : MonoBehaviour
     {
         if (CurrentThrust != 0)
         {
-            RigidbodyReference.AddForce(transform.forward * CurrentThrust);
+            RigidbodyReference.AddForce(transform.forward * CurrentThrust, ForceMode.Force);
         }
 
         if (CurrentTurnForce != 0)
         {
-            RigidbodyReference.AddRelativeTorque(Vector3.up * CurrentTurnForce);
+            RigidbodyReference.AddTorque(transform.up * CurrentTurnForce, ForceMode.Force);
         }
     }
 

@@ -38,8 +38,8 @@ public class BallBoardController : MonoBehaviour
     void Rotate()
     {
 
-        Vector3 inputTorque = transform.up * InputVector.x;
-        RigidbodyRef.AddTorque(inputTorque * TurnSpeed, ForceMode.Force);
+        Vector3 inputTorque = Vector3.up * InputVector.x;
+        RigidbodyRef.AddRelativeTorque(inputTorque * TurnSpeed, ForceMode.Force);
     }
 
     void MoveBoard()
