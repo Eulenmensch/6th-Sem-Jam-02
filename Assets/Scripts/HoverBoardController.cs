@@ -12,6 +12,7 @@ public class HoverBoardController : MonoBehaviour
     public float TurnForce;
     public float HoverForce;
     public float HoverHeight;
+    public float CorrectiveTorqueForce;
     public GameObject[] HoverPoints;
     public LayerMask RayLayerMask;
 
@@ -38,6 +39,7 @@ public class HoverBoardController : MonoBehaviour
     {
         Hover();
         ApplyMoveInput();
+        DontFlipOver();
     }
 
     void Hover()
@@ -50,17 +52,31 @@ public class HoverBoardController : MonoBehaviour
                 //RigidbodyReference.AddForceAtPosition(Vector3.up * HoverForce * (1.0f - (hit.distance / HoverHeight)), hoverPoint.transform.position);
                 RigidbodyReference.AddForceAtPosition(Vector3.up * (HoverForce / Mathf.Pow(hit.distance, HoverHeight)), hoverPoint.transform.position);
             }
-            else
-            {
-                if (transform.position.y > hoverPoint.transform.position.y)
-                {
-                    RigidbodyReference.AddForceAtPosition(hoverPoint.transform.up * HoverForce, hoverPoint.transform.position);
-                }
-                else
-                {
-                    RigidbodyReference.AddForceAtPosition(hoverPoint.transform.up * -HoverForce, hoverPoint.transform.position);
-                }
-            }
+            // else
+            // {
+            //     if (transform.position.y > hoverPoint.transform.position.y)
+            //     {
+            //         RigidbodyReference.AddForceAtPosition(hoverPoint.transform.up * HoverForce, hoverPoint.transform.position);
+            //     }
+            //     else
+            //     {
+            //         RigidbodyReference.AddForceAtPosition(hoverPoint.transform.up * -HoverForce, hoverPoint.transform.position);
+            //     }
+            // }
+        }
+    }
+
+    void DontFlipOver()
+    {
+        if (transform.localEulerAngles.z > 60.0f)
+        {
+            RigidbodyReference.AddRelativeTorque(transform.forward * CorrectiveTorqueForce, ForceMode.Force);
+            Debug.Log("over 60");
+        }
+        if (transform.localEulerAngles.z > 300.0f)
+        {
+            RigidbodyReference.AddRelativeTorque(-transform.forward * CorrectiveTorqueForce, ForceMode.Force);
+            Debug.Log("under 60");
         }
     }
 
