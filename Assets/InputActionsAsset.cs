@@ -49,6 +49,14 @@ public class @InputActionsAsset : IInputActionCollection, IDisposable
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Crouch/Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""d14697a1-f1e1-46e7-afb4-3a857bdd3fe1"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": ""Press(behavior=2)""
                 }
             ],
             ""bindings"": [
@@ -313,6 +321,28 @@ public class @InputActionsAsset : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""LightAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4aef5460-def4-4fd5-b121-81bd0415bf1f"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Crouch/Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""604b262f-4a47-4893-bbfe-183133fb0487"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Crouch/Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -894,6 +924,7 @@ public class @InputActionsAsset : IInputActionCollection, IDisposable
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
         m_Player_LightAttack = m_Player.FindAction("LightAttack", throwIfNotFound: true);
+        m_Player_CrouchJump = m_Player.FindAction("Crouch/Jump", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -959,6 +990,7 @@ public class @InputActionsAsset : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_Fire;
     private readonly InputAction m_Player_LightAttack;
+    private readonly InputAction m_Player_CrouchJump;
     public struct PlayerActions
     {
         private @InputActionsAsset m_Wrapper;
@@ -967,6 +999,7 @@ public class @InputActionsAsset : IInputActionCollection, IDisposable
         public InputAction @Look => m_Wrapper.m_Player_Look;
         public InputAction @Fire => m_Wrapper.m_Player_Fire;
         public InputAction @LightAttack => m_Wrapper.m_Player_LightAttack;
+        public InputAction @CrouchJump => m_Wrapper.m_Player_CrouchJump;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -988,6 +1021,9 @@ public class @InputActionsAsset : IInputActionCollection, IDisposable
                 @LightAttack.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLightAttack;
                 @LightAttack.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLightAttack;
                 @LightAttack.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLightAttack;
+                @CrouchJump.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCrouchJump;
+                @CrouchJump.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCrouchJump;
+                @CrouchJump.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCrouchJump;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1004,6 +1040,9 @@ public class @InputActionsAsset : IInputActionCollection, IDisposable
                 @LightAttack.started += instance.OnLightAttack;
                 @LightAttack.performed += instance.OnLightAttack;
                 @LightAttack.canceled += instance.OnLightAttack;
+                @CrouchJump.started += instance.OnCrouchJump;
+                @CrouchJump.performed += instance.OnCrouchJump;
+                @CrouchJump.canceled += instance.OnCrouchJump;
             }
         }
     }
@@ -1164,6 +1203,7 @@ public class @InputActionsAsset : IInputActionCollection, IDisposable
         void OnLook(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
         void OnLightAttack(InputAction.CallbackContext context);
+        void OnCrouchJump(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

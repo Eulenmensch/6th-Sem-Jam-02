@@ -16,11 +16,17 @@ public class HoverBoardController : MonoBehaviour
     public GameObject[] HoverPoints;
     public LayerMask RayLayerMask;
 
+    public float GroundedDistance;
+    public float JumpForce;
+
+    public Animator CharacterAnimator;
+
     private Rigidbody RigidbodyReference;
     private float CurrentThrust;
     private float CurrentTurnForce;
 
     private Vector2 InputVector;
+    private bool IsCrouching;
 
 
     // Start is called before the first frame update
@@ -49,8 +55,9 @@ public class HoverBoardController : MonoBehaviour
         {
             if (Physics.Raycast(hoverPoint.transform.position, Vector3.down, out hit, HoverHeight, RayLayerMask))
             {
-                //RigidbodyReference.AddForceAtPosition(Vector3.up * HoverForce * (1.0f - (hit.distance / HoverHeight)), hoverPoint.transform.position);
-                RigidbodyReference.AddForceAtPosition(Vector3.up * (HoverForce / Mathf.Pow(hit.distance, HoverHeight)), hoverPoint.transform.position);
+                RigidbodyReference.AddForceAtPosition(Vector3.up * HoverForce * Mathf.Pow((1.0f - (hit.distance / HoverHeight)), 1.7f), hoverPoint.transform.position);
+                //RigidbodyReference.AddForceAtPosition(Vector3.up * (HoverForce / Mathf.Pow(hit.distance, HoverHeight)), hoverPoint.transform.position);
+                //RigidbodyReference.AddForceAtPosition(transform.up * HoverForce * Mathf.Pow((HoverHeight / hit.distance), 1.5f), hoverPoint.transform.position);
             }
             // else
             // {
@@ -107,12 +114,40 @@ public class HoverBoardController : MonoBehaviour
 
         if (CurrentTurnForce != 0)
         {
-            RigidbodyReference.AddTorque(transform.up * CurrentTurnForce, ForceMode.Force);
+            RigidbodyReference.AddRelativeTorque(Vector3.up * CurrentTurnForce, ForceMode.Force);
         }
     }
 
     public void GetMoveInput(InputAction.CallbackContext context)
     {
         InputVector = context.ReadValue<Vector2>();
+    }
+
+    public void GetCrouchJumpInput(InputAction.CallbackContext context)
+    {
+        if (context.performed && !IsCrouching)
+        {
+            IsCrouching = true;
+            CharacterAnimator.SetBool("IsCrouching", true);
+        }
+        else if (context.performed && IsCrouching)
+        {
+            IsCrouching = false;
+            CharacterAnimator.SetBool("IsCrouching", false);
+            if (IsGrounded())
+            {
+                Jump();
+            }
+        }
+    }
+
+    void Jump()
+    {
+        RigidbodyReference.AddForce(Vector3.up * JumpForce, ForceMode.Impulse);
+    }
+
+    bool IsGrounded()
+    {
+        return Physics.Raycast(transform.position, Vector3.down, GroundedDistance, RayLayerMask);
     }
 }
