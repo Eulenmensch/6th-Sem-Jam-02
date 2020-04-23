@@ -55,7 +55,7 @@ public class HoverBoardController : MonoBehaviour
         {
             if (Physics.Raycast(hoverPoint.transform.position, Vector3.down, out hit, HoverHeight, RayLayerMask))
             {
-                RigidbodyReference.AddForceAtPosition(Vector3.up * HoverForce * Mathf.Pow((1.0f - (hit.distance / HoverHeight)), 1.7f), hoverPoint.transform.position);
+                RigidbodyReference.AddForceAtPosition(Vector3.up * (HoverForce * Mathf.Pow((1.0f - (hit.distance / HoverHeight)), 1.7f)), hoverPoint.transform.position);
                 //RigidbodyReference.AddForceAtPosition(Vector3.up * (HoverForce / Mathf.Pow(hit.distance, HoverHeight)), hoverPoint.transform.position);
                 //RigidbodyReference.AddForceAtPosition(transform.up * HoverForce * Mathf.Pow((HoverHeight / hit.distance), 1.5f), hoverPoint.transform.position);
             }
@@ -78,12 +78,10 @@ public class HoverBoardController : MonoBehaviour
         if (transform.localEulerAngles.z > 60.0f)
         {
             RigidbodyReference.AddRelativeTorque(transform.forward * CorrectiveTorqueForce, ForceMode.Force);
-            Debug.Log("over 60");
         }
         if (transform.localEulerAngles.z > 300.0f)
         {
             RigidbodyReference.AddRelativeTorque(-transform.forward * CorrectiveTorqueForce, ForceMode.Force);
-            Debug.Log("under 60");
         }
     }
 
